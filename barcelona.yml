@@ -1,12 +1,18 @@
-environments:
-  production:
-    name: barcelona2
-    image_name: public.ecr.aws/degica/barcelona
-    before_deploy: rake db:migrate
-    scheduled_tasks:
+scheduled_tasks: &scheduled_tasks
+  scheduled_tasks:
       # 10AM JST every week day
       - schedule: cron(0 1 ? * MON-FRI *)
         command: bin/chaos
+      # every 5 minutes
+      - schedule: cron(0/5 * ? * * *)
+        command: rake bcn:deployment_check
+
+environments:
+  production:
+    <<: *scheduled_tasks
+    name: barcelona2
+    image_name: public.ecr.aws/degica/barcelona
+    before_deploy: rake db:migrate
     services:
       - name: web
         service_type: web
@@ -23,13 +29,10 @@ environments:
         cpu: 128
         memory: 256
   test:
+    <<: *scheduled_tasks
     name: barcelona
     image_name: public.ecr.aws/degica/barcelona
     before_deploy: rake db:migrate
-    scheduled_tasks:
-      # 10AM JST every week day
-      - schedule: cron(0 1 ? * MON-FRI *)
-        command: bin/chaos
     services:
       - name: web
         service_type: web

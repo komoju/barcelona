@@ -42,6 +42,10 @@ class DeployRunnerJob < ActiveJob::Base
         sleep 3
       end
     end
+
+  rescue => e
+    Rails.logger.error e
+    Rails.logger.error e.backtrace
   end
 
   def other_deploy_in_progress?(heritage)
@@ -51,6 +55,7 @@ class DeployRunnerJob < ActiveJob::Base
   end
 
   def notify(level: :good, message:)
+    Rails.logger.info message
     Event.new(@heritage.district).notify(level: level, message: "[#{@heritage.name}] #{message}")
   end
 end
