@@ -77,7 +77,8 @@ def no_query_params_log_format
     '$proxy_protocol_addr - [$time_local] '
     '"$request_method $uri $server_protocol" $status $body_bytes_sent '
     '"$http_user_agent"'
-    'rt=$request_time uct="$upstream_connect_time" uht="$upstream_header_time" urt="$upstream_response_time"'
+    'rt=$request_time uct="$upstream_connect_time" uht="$upstream_header_time" urt="$upstream_response_time" '
+    '"trace-id=$http_x_amzn_trace_id"'
   LOG_FORMAT
 end
 
