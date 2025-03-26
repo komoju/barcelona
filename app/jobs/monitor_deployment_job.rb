@@ -2,6 +2,9 @@ class MonitorDeploymentJob < ActiveJob::Base
   queue_as :default
 
   def perform(service, count: 0, deployment_id: nil)
+    # old version does not rely on cloudformation and thus has to be
+    # polled one by one. We will need to clean this up later.
+
     if service.deployment_finished?(deployment_id)
       notify(service, message: "#{service.name} service deployed")
     elsif count > 20
@@ -15,6 +18,7 @@ class MonitorDeploymentJob < ActiveJob::Base
   end
 
   def notify(service, level: :good, message:)
+    Rails.logger.info message
     Event.new(service.district).notify(level: level, message: "[#{service.heritage.name}] #{message}")
   end
 end

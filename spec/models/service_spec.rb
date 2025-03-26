@@ -210,4 +210,36 @@ describe Service do
       expect(s2.service_deployments).to eq [s2d1]
     end
   end
+
+  describe '#deployment_finished?' do
+    it 'returns true if there are no deployments (backwards compat)' do
+      s = create :service
+
+      expect(s).to be_deployment_finished
+    end
+
+    it 'returns true if the last one is finished' do
+      s = create :service
+      create :service_deployment, service: s, completed_at: Time.now
+
+      expect(s).to be_deployment_finished
+    end
+
+    it 'returns false if the last one is not yet finished' do
+      s = create :service
+      create :service_deployment, service: s
+
+      expect(s).to_not be_deployment_finished
+    end
+  end
+
+  describe '#stack_name' do
+    it 'returns the corresponding stack name' do
+      s = create :service, name: 'serv'
+      allow(s.district).to receive(:name) { 'dist' }
+      allow(s.heritage).to receive(:name) { 'heri' }
+
+      expect(s.stack_name).to eq "dist-heri-serv"
+    end
+  end
 end
