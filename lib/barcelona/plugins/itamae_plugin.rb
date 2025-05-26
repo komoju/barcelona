@@ -14,8 +14,10 @@ module Barcelona
       def on_network_stack_template(_stack, template)
         bastion_lc = template["BastionLaunchConfiguration"]
         return template if bastion_lc.nil?
+        return template unless attributes['recipe_url'] =~ URI::regexp
 
         user_data = InstanceUserData.load_or_initialize(bastion_lc["Properties"]["UserData"])
+
         install_itamae(user_data)
         apply_itamae_recipe(user_data, attributes['recipe_url'], 'barcelona_bastion')
         bastion_lc["Properties"]["UserData"] = user_data.build
