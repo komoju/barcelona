@@ -223,7 +223,7 @@ describe Barcelona::Network::NetworkStack do
             "ZipFile" => kind_of(String)
           },
           "Handler" => "index.lambda_handler",
-          "Runtime" => "python3.7",
+          "Runtime" => "python3.12",
           "Timeout" => "60",
           "Role" => {"Fn::GetAtt" => ["ASGDrainingFunctionRole", "Arn"]},
           "Environment" => {

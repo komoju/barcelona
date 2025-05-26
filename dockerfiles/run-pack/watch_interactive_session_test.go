@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"log"
 	"testing"
 
 	ps "github.com/mitchellh/go-ps"
@@ -24,6 +26,7 @@ func (p *ProcessMock) Executable() string {
 }
 
 func TestOtherSessionRunning(t *testing.T) {
+	log.Println(fmt.Sprintf("Interactive session has not started for %d seconds", 123))
 	ps1 := []ps.Process{
 		&ProcessMock{pid: 1, ppid: 0},
 		&ProcessMock{pid: 10, ppid: 1},
